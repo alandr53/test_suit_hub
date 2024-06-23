@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+}
+version = '0.0.0'
+group = 'com.mb.testsuithub'
+
+repositories { mavenCentral() }
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+jar {
+    archiveFileName = 'testsuithub-server.jar'
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    } {
+        exclude "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA"
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+    manifest {
+        attributes 'TestSuitHub-Version': version
+        attributes 'Main-Class': 'com.mb.testsuithub.server.TestSuitLauncher'
+        attributes 'Name': 'Build-Info'
+        attributes 'Version': version
+        attributes 'Build-Revision': 'not used'
+        attributes 'Build-Time': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date())
+    }
+    destinationDirectory = file("$rootDir/hub")
+}
+dependencies {
+    // https://mvnrepository.com/artifact/org.testng/testng
+    implementation 'org.testng:testng:7.9.0'
+    // https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-server
+    implementation 'org.eclipse.jetty:jetty-server:9.4.28.v20200408'
+    //implementation 'org.eclipse.jetty:jetty-server:11.0.0'
+    implementation 'org.eclipse.jetty:jetty-servlets:9.4.28.v20200408'
+    //implementation 'org.eclipse.jetty:jetty-server:12.0.7'
+    // https://mvnrepository.com/artifact/org.eclipse.jetty.websocket/websocket-server
+    implementation 'org.eclipse.jetty.websocket:websocket-server:9.4.54.v20240208'
+    // https://mvnrepository.com/artifact/javax.websocket/javax.websocket-api
+    implementation 'javax.websocket:javax.websocket-api:1.1'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.30'
+    implementation 'commons-io:commons-io:2.8.0'
+
+    // Apache Commons IO
+    implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+
+    // Apache Commons Lang
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+
+    // Apache HTTPClient
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+
+    // Jersey Core
+   // implementation group: 'org.glassfish.jersey.core', name: 'jersey-common', version: '2.35'
+
+    // Jersey Client
+   // implementation group: 'org.glassfish.jersey.core', name: 'jersey-client', version: '2.35'
+
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+    implementation 'com.google.code.gson:gson:2.8.8'
+
+    implementation 'com.google.guava:guava:31.0.1-jre'
+
+    // JavaMail API
+    implementation 'com.sun.mail:javax.mail:1.6.2'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+}
+
+test {
+    useTestNG()
+}
